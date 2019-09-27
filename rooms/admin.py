@@ -2,31 +2,63 @@ from django.contrib import admin
 from . import models
 
 
-@admin.register(models.Facility)
-class Facility(admin.ModelAdmin):
-    pass
+@admin.register(models.RoomType, models.Facility, models.Amenity, models.HouseRule)
+class ItemAdmin(admin.ModelAdmin):
+    list_display = ("name", "room_count")
 
-
-@admin.register(models.Amenity)
-class AmenityTypeAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(models.HouseRule)
-class HouseRuleTypeAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(models.RoomType)
-class RoomTypeAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(models.Photo)
-class PhoteAdmin(admin.ModelAdmin):
-    pass
+    def room_count(self, obj):
+        return obj.rooms.count()
 
 
 @admin.register(models.Room)
 class RoomAdmin(admin.ModelAdmin):
+
+    fieldsets = (
+        (
+            "Basic Info",
+            {"fields": ("name", "description", "country", "address", "price")},
+        ),
+        ("Times", {"fields": ("check_in", "check_out", "instant_book")}),
+        ("Spaces", {"fields": ("guests", "beds", "bedrooms", "baths")}),
+        (
+            "More About the Space",
+            {
+                "classes": ("collapse",),
+                "fields": ("amenities", "facilities", "house_rules"),
+            },
+        ),
+        ("Last Details", {"fields": ("host",)}),
+    )
+
+    ordering = ("name", "price", "bedrooms")
+
+    list_display = (
+        "name",
+        "city",
+        "country",
+        "instant_book",
+        "host",
+        "price",
+        "bedrooms",
+        "count_amenities",
+        "count_photos",
+        "total_rating",
+    )
+    filter_horizontal = ("amenities", "facilities")
+    list_filter = ("city", "host__superhost", "country")
+
+    search_fields = ("=city", "^host__username")
+
+    def count_amenities(self, obj):
+        return obj.amenities.count()
+
+    def count_photos(self, obj):
+        return obj.photos.count()
+
+    # count_amenities.short_description = "Super Sexy"
+
+
+@admin.register(models.Photo)
+class PhotoAdmin(admin.ModelAdmin):
+
     pass
