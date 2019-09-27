@@ -29,6 +29,7 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+TIRDPART_APPS = []
 
 DJANGO_APPS = [
     "django.contrib.admin",
@@ -38,6 +39,7 @@ DJANGO_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
+
 PROJECT_APPS = ["users.apps.UsersConfig"]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS
