@@ -29,5 +29,15 @@ class Command(BaseCommand):
                 "baths": lambda x: random.randint(1, 5),
             },
         )
-        seeder.execute()
+
+        inserted_pks = seeder.execute()
+        for pk in inserted_pks[rooms_model.Room]:
+            room = rooms_model.Room.objects.get(pk=pk)
+            for i in range(3, random.randint(10, 17)):
+                rooms_model.Photo.objects.create(
+                    caption=seeder.faker.sentence(),
+                    room=room,
+                    file=f"/room_photos/photos_seed/{random.randint(1, 31)}.webp",
+                )
+
         self.stdout.write(self.style.SUCCESS(f"{num} Room Created"))
