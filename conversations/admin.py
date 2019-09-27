@@ -5,7 +5,6 @@ from . import models
 @admin.register(models.Conversation)
 class ConversationAdmin(admin.ModelAdmin):
     filter_horizontal = ("participants",)
-    pass
 
 
 @admin.register(models.Message)
