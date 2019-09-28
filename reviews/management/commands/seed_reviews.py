@@ -5,6 +5,8 @@ from reviews import models as reviews_model
 from users.models import User
 from rooms.models import Room
 
+NAME = "reviews"
+
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
