@@ -1,4 +1,4 @@
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django_seed import Seed
 import random
 from rooms import models as rooms_model
@@ -22,7 +22,7 @@ class Command(BaseCommand):
             rooms_model.Room,
             num,
             {
-                "name": seeder.faker.address(),
+                "name": lambda x: seeder.faker.address(),
                 "host": lambda x: random.choice(all_users),
                 "room_type": lambda x: random.choice(room_types),
                 "guests": lambda x: random.randint(1, 20),
