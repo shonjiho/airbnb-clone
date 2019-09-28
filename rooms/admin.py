@@ -79,4 +79,3 @@ class RoomAdmin(admin.ModelAdmin):
         return obj.photos.count()
 
     # count_amenities.short_description = "Super Sexy"
-

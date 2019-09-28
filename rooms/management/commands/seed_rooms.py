@@ -7,16 +7,12 @@ from users import models as users_model
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
-        parser.add_argument("--number", help="How to many room make?")
+        parser.add_argument(
+            "--number", default=1, type=int, help="How to many room make?"
+        )
 
     def handle(self, *args, **options):
-        num = options.get("number", 1)
-
-        if num is None:
-            message = "You need --number options"
-            raise CommandError(message)
-        else:
-            num = int(num)
+        num = options.get("number")
 
         seeder = Seed.seeder()
         all_users = users_model.User.objects.all()

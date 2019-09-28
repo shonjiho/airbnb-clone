@@ -4,9 +4,7 @@ from rooms.models import HouseRule
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
-        parser.add_argument(
-            "--num", help="How many times do you want me to tell you that i love me"
-        )
+        pass
 
     def handle(self, *args, **options):
         rules = ["don`t smoke", "don`t pet", "don`t party", "don`t event"]
