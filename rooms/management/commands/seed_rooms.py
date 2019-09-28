@@ -1,4 +1,4 @@
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 from django_seed import Seed
 import random
 from rooms import models as rooms_model
@@ -10,7 +10,14 @@ class Command(BaseCommand):
         parser.add_argument("--number", help="How to many room make?")
 
     def handle(self, *args, **options):
-        num = int(options.get("number", 1))
+        num = options.get("number", 1)
+
+        if num is None:
+            message = "You need --number options"
+            raise CommandError(message)
+        else:
+            num = int(num)
+
         seeder = Seed.seeder()
         all_users = users_model.User.objects.all()
         room_types = rooms_model.RoomType.objects.all()
@@ -29,15 +36,32 @@ class Command(BaseCommand):
                 "baths": lambda x: random.randint(1, 5),
             },
         )
+        amenities = rooms_model.Amenity.objects.all()
+        facilities = rooms_model.Facility.objects.all()
+        rules = rooms_model.HouseRule.objects.all()
 
         inserted_pks = seeder.execute()
         for pk in inserted_pks[rooms_model.Room]:
             room = rooms_model.Room.objects.get(pk=pk)
-            for i in range(3, random.randint(10, 17)):
+            for i in range(3, random.randint(10, 30)):
                 rooms_model.Photo.objects.create(
                     caption=seeder.faker.sentence(),
                     room=room,
-                    file=f"/room_photos/photos_seed/{random.randint(1, 31)}.webp",
+                    file=f"room_photos/photos_seed/{random.randint(1, 31)}.webp",
                 )
+            for a in amenities:
+                magic_number = random.randint(0, 15)
+                if magic_number % 2 == 0:
+                    room.amenities.add(a)
 
-        self.stdout.write(self.style.SUCCESS(f"{num} Room Created"))
+            for f in facilities:
+                magic_number = random.randint(0, 15)
+                if magic_number % 2 == 0:
+                    room.facilities.add(f)
+
+            for r in rules:
+                magic_number = random.randint(0, 15)
+                if magic_number % 2 == 0:
+                    room.house_rules.add(r)
+
+        self.stdout.write(self.style.SUCCESS(f"{num} Rooms Created"))

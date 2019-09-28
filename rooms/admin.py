@@ -49,6 +49,10 @@ class RoomAdmin(admin.ModelAdmin):
         ("Last Details", {"fields": ("host",)}),
     )
 
+    filter_horizontal = ("amenities", "facilities")
+
+    raw_id_fields = ("amenities",)
+
     ordering = ("name", "price", "bedrooms")
 
     list_display = (
@@ -63,10 +67,6 @@ class RoomAdmin(admin.ModelAdmin):
         "count_photos",
         "total_rating",
     )
-
-    raw_id_fields = ("amenities",)
-
-    filter_horizontal = ("amenities", "facilities")
 
     list_filter = ("city", "host__superhost", "country")
 

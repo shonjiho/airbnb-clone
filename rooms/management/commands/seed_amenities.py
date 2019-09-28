@@ -4,9 +4,7 @@ from rooms.models import Amenity
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
-        parser.add_argument(
-            "--times", help="How many times do you want me to tell you that i love me"
-        )
+        pass
 
     def handle(self, *args, **options):
         amenities = [
