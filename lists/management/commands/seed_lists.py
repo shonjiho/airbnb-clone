@@ -26,7 +26,9 @@ class Command(BaseCommand):
         cleaned = created[list_models.List]
         for pk in cleaned:
             list_model = list_models.List.objects.get(pk=pk)
-            to_add = rooms[random.randint(0, 5) : random.randint(6, 30)]
+            start = random.randint(0, 5)
+            end = random.randint(6, 30)
+            to_add = rooms[start:end]
             list_model.rooms.add(*to_add)
 
         self.stdout.write(self.style.SUCCESS(f"{num} lists created!!"))
