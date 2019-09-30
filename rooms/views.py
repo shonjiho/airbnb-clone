@@ -1,12 +1,10 @@
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from django.utils import timezone
-from django.shortcuts import render, redirect
-from django.http import Http404
-from django.urls import reverse
 from . import models as room_models
 
 
 class HomeView(ListView):
+
     """ HomeView Definition """
 
     model = room_models.Room
@@ -22,10 +20,10 @@ class HomeView(ListView):
         return context
 
 
-def room_detail(request, pk):
-    try:
-        room = room_models.Room.objects.get(pk=pk)
-        return render(request, "rooms/detail.html", context={"pk": pk, "room": room})
-    except room_models.Room.DoesNotExist:
-        # On DEBUG == False, Http404() show templates/404.html -> this is default
-        raise Http404()
+class RoomDetail(DetailView):
+
+    """ RoomDetail Definition """
+
+    model = room_models.Room
+    # auto
+    # context : { "room" : room }
