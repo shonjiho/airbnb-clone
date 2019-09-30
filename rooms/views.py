@@ -1,15 +1,15 @@
 from django.views.generic import ListView, DetailView
 from django.utils import timezone
 from django.shortcuts import render
-from django_countries import countries
-from . import models as room_models
+from . import models
+from . import forms
 
 
 class HomeView(ListView):
 
     """ HomeView Definition """
 
-    model = room_models.Room
+    model = models.Room
     paginate_by = 10
     ordering = "created"
     paginate_orphans = 5
@@ -26,87 +26,68 @@ class RoomDetail(DetailView):
 
     """ RoomDetail Definition """
 
-    model = room_models.Room
+    model = models.Room
     # auto
     # context : { "room" : room }
 
 
 def search(request):
-    city = request.GET.get("city", "AnyWhere")
-    city = str.capitalize(city)
-    country = request.GET.get("country", "KR")
-    room_type = int(request.GET.get("room_type", 0))
-    price = int(request.GET.get("price", 0))
-    guests = int(request.GET.get("guests", 0))
-    beds = int(request.GET.get("beds", 0))
-    bedrooms = int(request.GET.get("bedrooms", 0))
-    baths = int(request.GET.get("bedrooms", 0))
-    instant = bool(request.GET.get("instant", False))
-    superhost = bool(request.GET.get("superhost", False))
-    s_amenities = request.GET.getlist("amenities")
-    s_facilities = request.GET.getlist("facilities")
+    form = forms.SearchForm(request.GET)
+    if form.is_valid():
+        print(form.cleaned_data)
+        city = form.cleaned_data.get("city")
+        room_type = form.cleaned_data.get("room_type")
+        country = form.cleaned_data.get("country")
+        price = form.cleaned_data.get("price")
+        guests = form.cleaned_data.get("guests")
+        beds = form.cleaned_data.get("beds")
+        bedrooms = form.cleaned_data.get("bedrooms")
+        baths = form.cleaned_data.get("baths")
+        instant_book = form.cleaned_data.get("instant_book")
+        superhost = form.cleaned_data.get("superhost")
+        amenities = form.cleaned_data.get("amenities")
+        facilities = form.cleaned_data.get("facilities")
 
-    room_types = room_models.RoomType.objects.all()
-    amenities = room_models.Amenity.objects.all()
-    facilities = room_models.Facility.objects.all()
+        filter_kwargs = {}
 
-    form = {
-        "city": city,
-        "s_country": country,
-        "s_room_type": room_type,
-        "price": price,
-        "guests": guests,
-        "beds": beds,
-        "bedrooms": bedrooms,
-        "baths": baths,
-        "s_amenities": s_amenities,
-        "s_facilities": s_facilities,
-        "instant": instant,
-        "superhost": superhost,
-    }
+        filter_kwargs["city__startswith"] = city
+        filter_kwargs["country"] = country
+        if room_type is not None:
+            filter_kwargs["room_type"] = room_type
 
-    choices = {
-        "countries": countries,
-        "room_types": room_types,
-        "amenities": amenities,
-        "facilities": facilities,
-    }
+        if price is not None:
+            filter_kwargs["price__lte"] = price
 
-    filter_args = dict()
+        if guests is not None:
+            filter_kwargs["guests__lte"] = guests
 
-    if city != "AnyWhere":
-        filter_args["city__startswith"] = city
-    filter_args["country"] = country
-    if room_type != 0:
-        filter_args["room_type__pk"] = room_type
-    if price != 0:
-        filter_args["price__lte"] = price
-    if bedrooms != 0:
-        filter_args["bedrooms__gte"] = bedrooms
-    if beds != 0:
-        filter_args["beds__gte"] = beds
-    if baths != 0:
-        filter_args["baths__gte"] = baths
+        if beds is not None:
+            filter_kwargs["beds__lte"] = beds
 
-    if instant == True:
-        filter_args["instant_book"] = True
-    if superhost == True:
-        filter_args["host__superhost"] = True
+        if bedrooms is not None:
+            filter_kwargs["bedrooms__lte"] = bedrooms
 
-    # if len(amenities) > 0:
-    #     for s_amenity in s_amenities:
-    #         filter_args["amenities__pk"] = int(s_amenity)
+        if baths is not None:
+            filter_kwargs["baths__lte"] = baths
 
-    # if len(facilities) > 0:
-    #     for s_facility in s_facilities:
-    #         filter_args["facilities__pk"] = int(s_facility)
+        if instant_book is not None:
+            filter_kwargs["instant_book"] = instant_book
 
-    rooms = room_models.Room.objects.filter(**filter_args)
+        if superhost is not None:
+            filter_kwargs["host__superhost"] = superhost
 
-    for s_facility in s_facilities:
-        rooms = rooms.filter(facilities__pk=s_facility)
-    for s_amenity in s_amenities:
-        rooms = rooms.filter(facilities__pk=s_amenity)
+        rooms = models.Room.objects.filter(**filter_kwargs)
 
-    return render(request, "rooms/search.html", {**form, **choices, "rooms": rooms})
+        if amenities is not None:
+            for amenity in amenities:
+                rooms = rooms.filter(amenities=amenity)
+
+        if facilities is not None:
+            for facility in facilities:
+                rooms = rooms.filter(amenities=facility)
+
+        return render(request, "rooms/search.html", {"form": form, "rooms": rooms})
+    else:
+        form = forms.SearchForm()
+        return render(request, "rooms/search.html", {"form": form})
 
