@@ -1,5 +1,7 @@
 from django.views.generic import ListView, DetailView
 from django.utils import timezone
+from django.shortcuts import render
+from django_countries import countries
 from . import models as room_models
 
 
@@ -27,3 +29,15 @@ class RoomDetail(DetailView):
     model = room_models.Room
     # auto
     # context : { "room" : room }
+
+
+def search(request):
+    city = request.GET.get("city", "AnyWhere")
+    city = str.capitalize(city)
+    room_types = room_models.RoomType.objects.all()
+    return render(
+        request,
+        "rooms/search.html",
+        {"city": city, "countries": countries, "room_types": room_types},
+    )
+
