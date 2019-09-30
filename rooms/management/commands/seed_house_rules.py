@@ -11,4 +11,4 @@ class Command(BaseCommand):
         for r in rules:
             HouseRule.objects.create(name=r)
         num = len(rules)
-        self.stdout.write(self.style.SUCCESS(f"{num} Amenities MAKE!!"))
+        self.stdout.write(self.style.SUCCESS(f"{num} house_rule MAKE!!"))
