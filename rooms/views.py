@@ -1,5 +1,7 @@
 from django.views.generic import ListView
 from django.utils import timezone
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from . import models as room_models
 
 
@@ -18,3 +20,10 @@ class HomeView(ListView):
         context["now"] = now
         return context
 
+
+def room_detail(request, pk):
+    try:
+        room = room_models.Room.objects.get(pk=pk)
+        return render(request, "rooms/detail.html", context={"pk": pk, "room": room})
+    except room_models.Room.DoesNotExist:
+        return redirect(reverse("core:home"))
