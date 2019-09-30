@@ -63,8 +63,8 @@
         </div>
         
         <div>
-            <label for="super_host">By Superhost Only?</label>
-            <input id="super_host" type="checkbox" name="super_host" {% if super_host %}checked{% endif %}/>
+            <label for="superhost">By Superhost Only?</label>
+            <input id="superhost" type="checkbox" name="superhost" {% if superhost %}checked{% endif %}/>
         </div>
 
         <div>
@@ -107,8 +107,10 @@
             </ul>
         </div>
 
-        
-
         <button type="summit">Search</button>
     </form>
+    <h3> Result </h3>
+    {% for room in rooms  %}
+        <h4>{{room.name}} / {{romm.country}}</h4>
+    {% endfor %}
 {% endblock content %}

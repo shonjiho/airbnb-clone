@@ -51,7 +51,7 @@ class RoomAdmin(admin.ModelAdmin):
 
     filter_horizontal = ("amenities", "facilities")
 
-    raw_id_fields = ("amenities",)
+    raw_id_fields = ("host",)
 
     ordering = ("name", "price", "bedrooms")
 
