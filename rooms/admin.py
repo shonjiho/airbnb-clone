@@ -70,7 +70,7 @@ class RoomAdmin(admin.ModelAdmin):
 
     list_filter = ("city", "host__superhost", "country")
 
-    search_fields = ("=city", "^host__username")
+    search_fields = ("^city", "^host__username")
 
     def count_amenities(self, obj):
         return obj.amenities.count()

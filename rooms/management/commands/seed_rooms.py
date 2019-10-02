@@ -18,10 +18,14 @@ class Command(BaseCommand):
         all_users = users_model.User.objects.all()
         room_types = rooms_model.RoomType.objects.all()
 
+        cities = ["Seoul", "Busan", "Pangyu"]
+
         seeder.add_entity(
             rooms_model.Room,
             num,
             {
+                "country": "KR",
+                "city": lambda x: random.choice(cities),
                 "name": lambda x: seeder.faker.address(),
                 "host": lambda x: random.choice(all_users),
                 "room_type": lambda x: random.choice(room_types),

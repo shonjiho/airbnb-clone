@@ -1,20 +1,35 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block page_title %} Search {% endblock page_title
+%} {% block search-bar %} {% endblock search-bar %} {% block content %}
+<h2>Searching</h2>
+<form method="get" action="{% url 'rooms:search' %}">
+  {{ form.as_p }}
+  <button type="summit">Search</button>
+  <h3>Result</h3>
+  {% for room in rooms %}
+  <h4>{{ room.name }} / {{ romm.country }}</h4>
+  {% endfor %}
 
-{% block page_title %}
-    Search
-{% endblock page_title %}
+  <h4>
+    <span class="current">
+      Page {{ rooms.number }} of {{ rooms.paginator.num_pages }}.
+    </span>
+  </h4>
 
-{% block search-bar %}
-{% endblock search-bar %}
+  {% if rooms.has_previous %}
+  <button
+    type="summit"
+    name="page"
+    value="page={{ rooms.previous_page_number }}"
+  >
+    Previous
+  </button>
+  {% endif %} {% for index in rooms.paginator.page_range %}
+  <button type="summit" name="page" value="{{ index }}">{{ index }}</button>
+  {% endfor %} {% if rooms.has_next %}
+  <button type="summit" name="page" value="page={{ rooms.next_page_number }}">
+    Next
+  </button>
+  {% endif %}
+</form>
 
-{% block content %}
-    <h2>Searching</h2>
-    <form method="get" action="{% url 'rooms:search' %}">
-        {{form.as_p}}
-        <button type="summit">Search</button>
-    </form>
-    <h3> Result </h3>
-    {% for room in rooms  %}
-        <h4>{{room.name}} / {{romm.country}}</h4>
-    {% endfor %}
 {% endblock content %}
