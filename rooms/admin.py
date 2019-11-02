@@ -35,7 +35,8 @@ class RoomAdmin(admin.ModelAdmin):
     fieldsets = (
         (
             "Basic Info",
-            {"fields": ("name", "description", "country", "city", "address", "price")},
+            {"fields": ("name", "description", "country",
+                        "city", "address", "price")},
         ),
         ("Times", {"fields": ("check_in", "check_out", "instant_book")}),
         ("Spaces", {"fields": ("guests", "beds", "bedrooms", "baths")}),
@@ -70,7 +71,7 @@ class RoomAdmin(admin.ModelAdmin):
 
     list_filter = ("city", "host__superhost", "country")
 
-    search_fields = ("=city", "^host__username")
+    search_fields = ("^city", "^host__username")
 
     def count_amenities(self, obj):
         return obj.amenities.count()

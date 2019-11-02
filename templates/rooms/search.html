@@ -9,12 +9,42 @@
 
 {% block content %}
     <h2>Searching</h2>
-    <form method="get" action="{% url 'rooms:search' %}">
+    <form name="userinput" method="get" action="{% url 'rooms:search' %}">
         {{form.as_p}}
         <button type="summit">Search</button>
+        <h3> Result </h3>
+        {% for room in rooms  %}
+            <h4>{{room.name}} / {{romm.country}}</h4>
+        {% endfor %}
+        
+        <p>
+            <input id="hidden_page" style="display:none;" name="page" value={{rooms.number}}>
+            <span><a onClick="previous()">⬅️</a></span> 
+            page {{ rooms.number}}  of {{rooms.paginator.num_pages}} 
+            <span><a onClick="next()">➡️</a></span>
+        </p>
     </form>
-    <h3> Result </h3>
-    {% for room in rooms  %}
-        <h4>{{room.name}} / {{romm.country}}</h4>
-    {% endfor %}
+    <script>
+    var page_input = document.querySelector("#hidden_page")
+    max_page = {{rooms.paginator.num_pages}}
+    function previous(){
+        var page = Number(page_input.value)
+        if (page > 1){
+            page -= 1
+        }
+        console.log("previous" +page)
+        page_input.value = String(page)
+        document.userinput.submit()
+    }
+    function next(){
+        var page = Number(page_input.value)
+        if (page < max_page){
+            page += 1
+        }
+        console.log("next" + page)
+        page_input.value = String(page)
+        document.userinput.submit()
+    }
+    </script>
+    
 {% endblock content %}
