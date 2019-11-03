@@ -132,3 +132,9 @@ AUTH_USER_MODEL = "users.User"
 MEDIA_ROOT = os.path.join(BASE_DIR, "uplaods")
 
 MEDIA_URL = "/media/"
+
+# Email Configuration
+EMAIL_HOST = "smtp.mailgun.org"
+EMAIL_PORT = "25"
+EMAIL_HOST_USER = "brad@sandbox4c79e5fa58414936a85c254ca58b15ae.mailgun.org"
+EMAIL_HOST_PASSWORD = "28ba266c5e04f1838c765cf9606d1ab8-816b23ef-e4edf725"
