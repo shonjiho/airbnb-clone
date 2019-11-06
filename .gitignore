@@ -127,3 +127,6 @@ dmypy.json
 # mac
 _MACOSX
 .DS_Store
+
+# Django Image
+uploads/avatar_photos
