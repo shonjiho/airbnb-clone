@@ -130,3 +130,6 @@ _MACOSX
 
 # Django Image
 uploads/avatar_photos
+
+#nodejs
+node_modules
