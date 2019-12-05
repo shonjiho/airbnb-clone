@@ -11,7 +11,7 @@ yapf = "*"
 autopep8 = "*"
 
 [packages]
-django = "==2.2.5"
+django = "==2.2.8"
 pillow = "*"
 django-countries = "*"
 django-seed = "*"
