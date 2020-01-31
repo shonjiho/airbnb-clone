@@ -8,7 +8,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         types = ["Private Room", "Public Room", "Special Room", "Another Room"]
-        for type in types:
-            RoomType.objects.create(name=type)
+        for t in types:
+            RoomType.objects.create(name=t)
         num = len(types)
         self.stdout.write(self.style.SUCCESS(f"{num} Room Type MAKE!!"))

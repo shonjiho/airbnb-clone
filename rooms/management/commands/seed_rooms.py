@@ -1,6 +1,9 @@
+import random
+
 from django.core.management.base import BaseCommand
 from django_seed import Seed
-import random
+from django_countries import countries
+
 from rooms import models as rooms_model
 from users import models as users_model
 
@@ -17,13 +20,14 @@ class Command(BaseCommand):
         seeder = Seed.seeder()
         all_users = users_model.User.objects.all()
         room_types = rooms_model.RoomType.objects.all()
+        countries_codes = [code for code in dict(countries).keys()]
 
         seeder.add_entity(
             rooms_model.Room,
             num,
             {
-                "country": lambda x: 'KR',
-                "city": lambda x: 'seoul',
+                "country": lambda x: random.choice(countries_codes),
+                "city": lambda x: seeder.faker.city(),
                 "name": lambda x: seeder.faker.address(),
                 "host": lambda x: random.choice(all_users),
                 "room_type": lambda x: random.choice(room_types),

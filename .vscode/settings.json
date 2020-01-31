@@ -3,6 +3,8 @@
   "python.linting.flake8Enabled": true,
   "python.linting.pylintEnabled": false,
   "python.linting.enabled": true,
-  "python.formatting.provider": "autopep8",
-  "python.linting.flake8Args": ["--max-line-length=90"]
+  "python.formatting.provider": "black",
+  "python.linting.flake8Args": ["--max-line-length=90"],
+  "git.ignoreLimitWarning": true,
+  "scss.validate": false
 }
