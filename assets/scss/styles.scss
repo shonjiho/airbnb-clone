@@ -16,4 +16,14 @@
   }
 }
 
+.btn {
+  @apply w-full font-bold font-light text-center text-lg rounded-sm py-5  mb-2;
+}
+
+input {
+  @apply btn text-left border border-gray-600 px-5;
+  &:focus {
+    @apply outline-none border-teal-500;
+  }
+}
 @tailwind utilities;
