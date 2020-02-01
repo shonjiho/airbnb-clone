@@ -1,12 +1,15 @@
 import os
+import requests
+
 from django.views.generic import FormView
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect, reverse
+from django.contrib import messages
+from django.core.files.base import ContentFile
+
 from . import forms
 from . import models
-
-import requests
 
 
 class LoginView(FormView):
@@ -76,11 +79,13 @@ def github_callback(request):
         code = request.GET.get("code", None)
         client_id = os.environ.get("GH_ID")
         client_secret = os.environ.get("GH_SECRET")
+        raise GithubException()
         if code is not None:
             result = requests.post(
                 f"https://github.com/login/oauth/access_token?client_id={client_id}&client_secret={client_secret}&code={code}",
                 headers={"Accept": "application/json"}
             )
+
             result_json = result.json()
             error = result_json.get('error', None)
             if error is not None:
@@ -96,6 +101,7 @@ def github_callback(request):
                 )
                 profile = profile_request.json()
                 username = profile.get('login', None)
+
                 if username is not None:
                     email = profile.get('email')
                     name = profile.get('name')
@@ -122,4 +128,74 @@ def github_callback(request):
         raise GithubException()
 
     except GithubException:
+        messages.add_message(request, messages.ERROR, 'Auth is Wrong.')
+        return redirect(reverse("users:login"))
+
+
+KAKAO_AUTH_DOMAIN = "https://kauth.kakao.com/oauth"
+
+
+def kakao_login(request):
+    client_id = os.environ.get("KAKAO_ADMIN_ID")
+    redirect_uri = "http://127.0.0.1:8000/users/login/kakao/callback"
+    return redirect(f'{KAKAO_AUTH_DOMAIN}/authorize?client_id={client_id}&redirect_uri={redirect_uri}&response_type=code')
+
+
+class KakaoException(Exception):
+    pass
+
+
+def kakao_callback(request):
+
+    try:
+        code = request.GET.get("code")
+        client_id = os.environ.get("KAKAO_ADMIN_ID")
+        redirect_uri = "http://127.0.0.1:8000/users/login/kakao/callback"
+        data = {
+            "grant_type": "authorization_code",
+            "client_id": client_id,
+            "redirect_uri": redirect_uri,
+            "code": code
+        }
+        token_reqeust = requests.post(f"{KAKAO_AUTH_DOMAIN}/token", data=data)
+        token_json = token_reqeust.json()
+        error = token_json.get('error', None)
+        if error is not None:
+            raise KakaoException()
+        access_token = token_json.get('access_token')
+        profile_request = requests.post(f"https://kapi.kakao.com/v2/user/me", headers={
+            "Authorization": f"Bearer {access_token}"
+        })
+        profile_json = profile_request.json()
+        print(profile_json)
+        email = profile_json.get("kakao_account").get("email")
+        if email is None:
+            raise KakaoException()
+        properties = profile_json.get("properties")
+        nickname = properties.get("nickname")
+        profile_image = properties.get("profile_image")
+        try:
+            user = models.User.objects.get(email=email)
+            if user.login_method != models.User.LOGIN_KAKAO:
+                raise KakaoException()
+        except models.User.DoesNotExist:
+            user = models.User.objects.create(
+                email=email,
+                username=email,
+                first_name=nickname,
+                login_method=models.User.LOGIN_KAKAO,
+                email_verified=True
+            )
+            user.set_unusable_password()
+            user.save()
+
+            if profile_image is not None:
+                photo_reqeust = requests.get(profile_image)
+                user.avatar.save(f"{nickname}-avatar",
+                                 ContentFile(photo_reqeust.content))
+        login(request, user)
+
+        return redirect(reverse("core:home"))
+
+    except KakaoException:
         return redirect(reverse("users:login"))

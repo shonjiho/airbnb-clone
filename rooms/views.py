@@ -94,3 +94,4 @@ class RoomSearch(View):
             form = forms.SearchForm()
 
         return render(request, "rooms/search.html", {"form": form})
+
