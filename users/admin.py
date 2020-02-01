@@ -22,7 +22,7 @@ class CustomUserAdmin(UserAdmin):
                     "birthdate",
                     "language",
                     "currency",
-                    "login_method"
+                    "login_method",
                 )
             },
         ),
@@ -30,6 +30,7 @@ class CustomUserAdmin(UserAdmin):
 
     list_display = (
         "username",
+        "first_name",
         "gender",
         "bio",
         "birthdate",
@@ -38,6 +39,6 @@ class CustomUserAdmin(UserAdmin):
         "superhost",
         "email_verified",
         "email_secret",
-        "login_method"
+        "login_method",
     )
     list_filter = UserAdmin.list_filter + ("superhost",)
