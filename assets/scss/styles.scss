@@ -26,11 +26,18 @@
   @apply w-full font-bold font-light text-center text-lg rounded-lg py-3 text-white bg-red-500 mb-2;
 }
 
-input {
-  @apply btn text-left border border-gray-600 px-5;
+input,
+textarea,
+select {
+  @apply btn text-left border border-gray-600 w-full px-5 py-5 rounded-sm font-light text-lg;
   &:focus {
     @apply outline-none border-teal-500;
   }
+}
+
+textarea {
+  resize: none;
+  height: 100px;
 }
 
 form {

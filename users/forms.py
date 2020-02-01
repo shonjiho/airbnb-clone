@@ -3,28 +3,25 @@ from . import models
 
 
 class LoginForm(forms.Form):
-    email = forms.EmailField(widget=forms.EmailInput(
-        attrs={"placeholder": "Email"}))
-    password = forms.CharField(widget=forms.PasswordInput(
-        attrs={"placeholder": "Password"}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={"placeholder": "Email"}))
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={"placeholder": "Password"})
+    )
 
     def clean(self):
-        email = self.cleaned_data.get('email')
-        password = self.cleaned_data.get('password')
+        email = self.cleaned_data.get("email")
+        password = self.cleaned_data.get("password")
         try:
             user = models.User.objects.get(username=email)
             if user.check_password(password):
                 return self.cleaned_data
             else:
-                self.add_error("password", forms.ValidationError(
-                    "password is wrong."))
+                self.add_error("password", forms.ValidationError("password is wrong."))
         except models.User.DoesNotExist:
-            self.add_error("email", forms.ValidationError(
-                "User does not exist"))
+            self.add_error("email", forms.ValidationError("User does not exist"))
 
 
 class SignUpForm(forms.ModelForm):
-
     class Meta:
         model = models.User
         fields = ("first_name", "last_name", "email")
@@ -34,10 +31,12 @@ class SignUpForm(forms.ModelForm):
             "email": forms.EmailInput(attrs={"placeholder": "Email"}),
         }
 
-    password = forms.CharField(widget=forms.PasswordInput(
-        attrs={"placeholder": "Password"}))
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={"placeholder": "Password"})
+    )
     password1 = forms.CharField(
-        widget=forms.PasswordInput(attrs={"placeholder": "Confirm Password"}))
+        widget=forms.PasswordInput(attrs={"placeholder": "Confirm Password"})
+    )
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
