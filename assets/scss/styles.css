@@ -1,59 +1,49 @@
 @tailwind base;
-
 @tailwind components;
-
 .search-box {
   transition: box-shadow 0.2s linear;
 }
-
 .nav_link {
   @apply ml-8 border-b-2 border-white h-full flex items-center;
-  &:hover {
-    @apply border-gray-600;
-  }
-  a {
-    @apply py-10 px-5;
-  }
 }
-
+.nav_link:hover {
+  @apply border-gray-600;
+}
+.nav_link a {
+  @apply py-10 px-5;
+}
 .btn {
   @apply w-full font-bold font-light text-center text-lg rounded-sm py-5  mb-2;
-  &.btn--small {
-    @apply py-3 rounded-lg;
-  }
+}
+.btn.btn--small {
+  @apply py-3 rounded-lg;
 }
 .btn-link {
   @apply w-full font-bold font-light text-center text-lg rounded-lg py-3 text-white bg-red-500 mb-2;
 }
-
 input,
 textarea,
 select {
   @apply btn text-left border border-gray-600 w-full px-5 py-5 rounded-sm font-light text-lg;
-  &:focus {
-    @apply outline-none border-teal-500;
-  }
 }
-
+input:focus,
+textarea:focus,
+select:focus {
+  @apply outline-none border-teal-500;
+}
 textarea {
   resize: none;
   height: 100px;
 }
-
-form {
-  .input {
-    @apply mb-3;
-    &.has_error {
-      input {
-        @apply bg-red-200 border-gray-600;
-        &:focus {
-          @apply border-gray-600;
-        }
-      }
-    }
-  }
+form .input {
+  @apply mb-3;
 }
-
+form .input.has_error input {
+  @apply bg-red-200 border-gray-600;
+}
+form .input.has_error input:focus {
+  @apply border-gray-600;
+}
 @keyframes messageFadeIn {
   0% {
     opacity: 0;
@@ -72,25 +62,22 @@ form {
     transform: translateY(-50px);
   }
 }
-
 .message {
   animation: messageFadeIn 5s ease-in-out forwards;
-  &.error {
-    @apply bg-red-700;
-  }
-  &.info {
-    @apply bg-blue-500;
-  }
-  &.success {
-    @apply bg-green-500;
-  }
-  &.warning {
-    @apply bg-yellow-400;
-  }
 }
-
+.message.error {
+  @apply bg-red-700;
+}
+.message.info {
+  @apply bg-blue-500;
+}
+.message.success {
+  @apply bg-green-500;
+}
+.message.warning {
+  @apply bg-yellow-400;
+}
 .border-section {
   @apply border-b border-gray-400 pb-5 mt-5;
 }
-
 @tailwind utilities;

@@ -130,3 +130,5 @@ _MACOSX
 
 # Node Modules
 node_modules
+
+static/css

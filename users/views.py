@@ -8,7 +8,6 @@ from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect, reverse
 from django.contrib import messages
-from django.core.files.base import ContentFile
 
 
 from . import forms
