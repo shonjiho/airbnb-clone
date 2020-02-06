@@ -1,6 +1,11 @@
 from django.shortcuts import redirect
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.mixins import (
+    UserPassesTestMixin,
+    LoginRequiredMixin,
+    AccessMixin,
+)
 from django.contrib import messages
+from django.urls import reverse_lazy
 
 
 class LoggedOutOnlyView(UserPassesTestMixin):
@@ -12,4 +17,20 @@ class LoggedOutOnlyView(UserPassesTestMixin):
     def handle_no_permission(self):
         messages.error(self.request, "Can`t go")
         return redirect("core:home")
+
+
+class EmailLogInOnlyView(AccessMixin):
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            messages.error(self.request, "Can`t go")
+            return redirect("users:login")
+        elif not self.request.user.login_method == "email":
+            messages.error(self.request, "Can`t go")
+            return redirect("core:home")
+        else:
+            return super().dispatch(request, *args, **kwargs)
+
+
+class LoginInOnlyView(LoginRequiredMixin):
+    login_url = reverse_lazy("users:login")
 

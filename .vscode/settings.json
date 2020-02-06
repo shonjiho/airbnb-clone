@@ -1,10 +1,10 @@
 {
-  "python.pythonPath": "python",
+  "python.pythonPath": "C:\\Users\\hardh\\.virtualenvs\\airbnb-clone-FrCC4_Jx\\Scripts\\python.exe",
   "python.linting.flake8Enabled": true,
   "python.linting.pylintEnabled": false,
   "python.linting.enabled": true,
   "python.formatting.provider": "black",
-  "python.linting.flake8Args": ["--max-line-length=90"],
+  "python.linting.flake8Args": ["--max-line-length=130"],
   "git.ignoreLimitWarning": true,
   "scss.validate": false
 }

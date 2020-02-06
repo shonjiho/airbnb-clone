@@ -19,9 +19,16 @@
         </div>
 
         <span class="text-lg mb-5">{{user_obj.bio}}</span>
-        {% if user == user_obj %}
-        <a class="btn-link" href="{% url 'users:update' %}">Edit Profile</a>
+        
+        {% if user == user_obj%}
+            {% if user.login_method == 'email'  %}
+                <a class="btn-link" href="{% url 'users:update' %}">Edit Profile</a>
+            {% else %}
+                <p> {{user.login_method | capfirst }} </p>
+            {% endif %}
         {% endif %}
+
+    
     </div>
 
     {% if user_obj.rooms.count > 0 %}
