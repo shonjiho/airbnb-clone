@@ -24,8 +24,9 @@
       </div>
       {% include "partials/nav.html" %}
     </header>
-    {% block content %}{% endblock %}
-
+    <div class="min-h-75vh">
+      {% block content %}{% endblock %}
+    </div>
     {% include "partials/footer.html" %}
   </body>
 </html>
