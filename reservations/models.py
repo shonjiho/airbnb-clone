@@ -55,12 +55,14 @@ class Reservation(core_models.TimeStampedModel):
 
     def is_finished(self):
         now = timezone.now().date()
-        return now > self.check_out
+        is_finished = now > self.check_out
+        if is_finished:
+            BookedDay.objects.filter(reservation=self).delete()
+        return is_finished
 
     is_finished.boolean = True
 
     def save(self, *args, **kwargs):
-        # new reservation
         if self.pk is None:
             start = self.check_in
             end = self.check_out
@@ -68,7 +70,6 @@ class Reservation(core_models.TimeStampedModel):
             existing_booked_day = BookedDay.objects.filter(
                 day__range=(start, end), reservation__room=self.room
             ).exists()
-            return
 
             if not existing_booked_day:
                 super().save(*args, **kwargs)
