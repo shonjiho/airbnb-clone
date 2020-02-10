@@ -1,7 +1,10 @@
 from django.contrib import admin
 from . import models
 
-# Register your models here.
+
+@admin.register(models.BookedDay)
+class BookedDayAdmin(admin.ModelAdmin):
+    list_display = ("day", "reservation")
 
 
 @admin.register(models.Reservation)
