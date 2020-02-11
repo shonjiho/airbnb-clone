@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import (
     LoginRequiredMixin,
     AccessMixin,
 )
+from django.utils.translation import gettext_lazy as _
 from django.contrib import messages
 from django.urls import reverse_lazy
 
@@ -15,17 +16,17 @@ class LoggedOutOnlyView(UserPassesTestMixin):
         return not self.request.user.is_authenticated
 
     def handle_no_permission(self):
-        messages.error(self.request, "Can`t go")
+        messages.error(self.request, _("Can`t go"))
         return redirect("core:home")
 
 
 class EmailLogInOnlyView(AccessMixin):
     def dispatch(self, request, *args, **kwargs):
         if not self.request.user.is_authenticated:
-            messages.error(self.request, "Can`t go")
+            messages.error(self.request, _("Can`t go"))
             return redirect("users:login")
         elif not self.request.user.login_method == "email":
-            messages.error(self.request, "Can`t go")
+            messages.error(self.request, _("Can`t go"))
             return redirect("core:home")
         else:
             return super().dispatch(request, *args, **kwargs)

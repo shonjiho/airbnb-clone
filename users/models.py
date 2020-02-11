@@ -1,4 +1,5 @@
 import uuid
+from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -16,35 +17,41 @@ class User(AbstractUser):
     GENDER_OTHER = "other"
 
     GENDER_CHOICES = (
-        (GENDER_MALE, "Male"),
-        (GENDER_FEMALE, "FeMale"),
-        (GENDER_OTHER, "Other"),
+        (GENDER_MALE, _("Male")),
+        (GENDER_FEMALE, _("FeMale")),
+        (GENDER_OTHER, _("Other")),
     )
 
     LANGUAGE_ENGLISH = "english"
     LANGUAGE_KOREA = "korean"
-    LANGUAGE_CHOICES = ((LANGUAGE_ENGLISH, "English"), (LANGUAGE_KOREA, "Korea"))
+    LANGUAGE_CHOICES = ((LANGUAGE_ENGLISH, _("English")), (LANGUAGE_KOREA, _("Korea")))
 
     CURRENCY_USD = "usd"
     CURRENCY_KRW = "krw"
-    CURRENCY_CHOICES = ((CURRENCY_USD, "USD"), (CURRENCY_KRW, "KRW"))
+    CURRENCY_CHOICES = ((CURRENCY_USD, _("USD")), (CURRENCY_KRW, _("KRW")))
 
     LOGIN_EMAIL = "email"
     LOGIN_GITHUB = "github"
     LOGIN_KAKAO = "kakao"
 
     LOGIN_CHOICES = (
-        (LOGIN_EMAIL, "Email"),
-        (LOGIN_GITHUB, "Github"),
-        (LOGIN_KAKAO, "Kakao"),
+        (LOGIN_EMAIL, _("Email")),
+        (LOGIN_GITHUB, _("Github")),
+        (LOGIN_KAKAO, _("Kakao")),
     )
 
     avatar = models.ImageField(upload_to="avatar_photos", blank=True, null=True)
-    gender = models.CharField(choices=GENDER_CHOICES, max_length=10, blank=True)
-    bio = models.TextField(default="", blank=True)
+    gender = models.CharField(
+        _("gender"), choices=GENDER_CHOICES, max_length=10, blank=True
+    )
+    bio = models.TextField(_("bio"), default="", blank=True)
     birthdate = models.DateField(blank=True, null=True)
     language = models.CharField(
-        choices=LANGUAGE_CHOICES, max_length=10, blank=True, default=LANGUAGE_KOREA
+        _("language"),
+        choices=LANGUAGE_CHOICES,
+        max_length=10,
+        blank=True,
+        default=LANGUAGE_KOREA,
     )
     currency = models.CharField(
         choices=CURRENCY_CHOICES, max_length=3, blank=True, default=CURRENCY_KRW
@@ -64,7 +71,7 @@ class User(AbstractUser):
                 "emails/verify_email.html", {"secret": secret}
             )
             send_mail(
-                "Verify Airbnb Account",
+                _("Verify Airbnb Account"),
                 strip_tags(html_message),
                 settings.EMAIL_FROM,
                 [self.email],
