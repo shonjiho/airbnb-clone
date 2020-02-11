@@ -24,7 +24,7 @@
             </div>
             <div class="ml-5 flex flex-col">
                 <span class="font-medium mb-px">Contact your Airbnb Host</span>
-                <a href="#" class="py-2 text-teal-400 font-medium">Send a Message</a>
+                <a href="{% url 'conversations:go' reservation.room.host.pk reservation.guest.pk %}" class="py-2 text-teal-400 font-medium">Send a Message</a>
             </div>
         </div>
         {% if reservation.status != 'canceled' %}

@@ -7,6 +7,7 @@ from django.core.mail import send_mail
 from django.utils.html import strip_tags
 from django.template.loader import render_to_string
 from django.shortcuts import reverse
+from core.managers import CustomUserManager
 
 
 class User(AbstractUser):
@@ -62,6 +63,7 @@ class User(AbstractUser):
     login_method = models.CharField(
         choices=LOGIN_CHOICES, default=LOGIN_EMAIL, max_length=50
     )
+    objects = CustomUserManager()
 
     def verify_email(self):
         if self.email_verified is False:

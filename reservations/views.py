@@ -5,6 +5,7 @@ from django.views.generic import View
 from django.shortcuts import redirect, reverse, render
 from reviews import forms as review_forms
 from rooms import models as room_models
+from django.contrib.auth.decorators import login_required
 from . import models
 
 
@@ -12,6 +13,7 @@ class CreateError(Exception):
     pass
 
 
+@login_required
 def create(request, room, year, month, day):
     try:
         date_obj = datetime.datetime(year=year, month=month, day=day)
