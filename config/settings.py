@@ -27,9 +27,10 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET","C!GL0*h2h4*!EmApAjisTu4riq@74tr")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get('DEBUG'))
 
-ALLOWED_HOSTS = [".elasticbeanstalk.com"]
-    
-
+if DEBUG:
+    ALLOWED_HOSTS = []
+else:
+    ALLOWED_HOSTS = [".elasticbeanstalk.com"]
 
 # Application definition
 
@@ -146,7 +147,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 AUTH_USER_MODEL = "users.User"
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "uplaods")
+MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
 
 MEDIA_URL = "/media/"
 
@@ -163,9 +164,10 @@ LOGIN_URL = "/users/login"
 # Locale
 LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
 
+# for Debug
+
 
 if not DEBUG:
-    
     # AWS S3 Settings
     DEFAULT_FILE_STORAGE = 'config.custom_storages.UploadStorage'
     STATICFILES_STORAGE = 'config.custom_storages.StaticStorage'
@@ -178,7 +180,7 @@ if not DEBUG:
     AWS_S3_OBJECt_PARAMETERS = {"CacheControl": "max-age=86400"}
     AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
     STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
-
+    
     #Sentry Settings
     sentry_sdk.init(
         dsn=os.environ.get("SENTRY_URL"),
@@ -188,3 +190,5 @@ if not DEBUG:
 
     #Deploy Domain
     DOMAIN_URL = os.environ.get("DOMAIN_URL")
+else:
+    DOMAIN_URL = "localhost"

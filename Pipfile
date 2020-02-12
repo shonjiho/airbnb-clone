@@ -8,7 +8,7 @@ awsebcli = "
 flake8 = "*"
 
 [packages]
-django = "==2.2.5"
+django = ">=2.2.10"
 pillow = "*"
 django-countries = "*"
 django-seed = "*"
