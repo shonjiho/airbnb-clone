@@ -4,6 +4,8 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+awsebcli = "
+flake8 = "*"
 
 [packages]
 django = "==2.2.5"
@@ -14,6 +16,8 @@ django-dotenv = "*"
 requests = "*"
 pipenv-to-requirements = "*"
 sentry-sdk = "==0.14.1"
+django-storages = "*"
+boto3 = "*"
 
 [requires]
 python_version = "3.7"
