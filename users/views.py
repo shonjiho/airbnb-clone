@@ -80,6 +80,7 @@ def complete_verification(self, key: str):
 def github_login(request):
     client_id = os.environ.get("GH_ID")
     redirect_uri = "http://127.0.0.1:8000/users/login/github/callback"
+    # TODO: we need change 127.0.0.1 => deploy domain
     return redirect(
         f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&scope=read:user"
     )
@@ -156,6 +157,7 @@ KAKAO_AUTH_DOMAIN = "https://kauth.kakao.com/oauth"
 def kakao_login(request):
     client_id = os.environ.get("KAKAO_ADMIN_ID")
     redirect_uri = "http://127.0.0.1:8000/users/login/kakao/callback"
+    # TODO: we need change 127.0.0.1 => deploy domain
     return redirect(
         f"{KAKAO_AUTH_DOMAIN}/authorize?client_id={client_id}&redirect_uri={redirect_uri}&response_type=code"
     )
@@ -171,6 +173,7 @@ def kakao_callback(request):
         code = request.GET.get("code")
         client_id = os.environ.get("KAKAO_ADMIN_ID")
         redirect_uri = "http://127.0.0.1:8000/users/login/kakao/callback"
+        # TODO: we need change 127.0.0.1 => deploy domain
         data = {
             "grant_type": "authorization_code",
             "client_id": client_id,
