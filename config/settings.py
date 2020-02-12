@@ -184,3 +184,6 @@ if not DEBUG:
         integrations=[DjangoIntegration()],
         send_default_pii=True
     )
+
+    #Deploy Domain
+    DOMAIN_URL = os.environ.get("DOMAIN_URL")

@@ -2,6 +2,7 @@ import os
 import requests
 
 from django.utils import translation
+from django.utils.translation import gettext_lazy as _
 from django.http import HttpResponse
 from django.views.generic import FormView, DetailView, UpdateView
 from django.contrib.auth.views import PasswordChangeView
@@ -12,11 +13,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect, reverse
 from django.contrib import messages
 from django.core.files.base import ContentFile
+from django.conf import settings
 
 from . import forms
 from . import models
 from . import mixins
 
+HOST_DOMAIN = settings.DOMAIN_URL
 
 class LoginView(mixins.LoggedOutOnlyView, FormView):
     template_name = "users/login.html"
@@ -64,23 +67,21 @@ class SignUpView(mixins.LoggedOutOnlyView, FormView):
         return super().form_valid(form)
 
 
-def complete_verification(self, key: str):
+def complete_verification(request, key: str):
     try:
         user = models.User.objects.get(email_secret=key)
         user.email_verified = True
         user.email_secret = ""
         user.save()
-        # todo: add success message
+        messages.success(request, _("Login Success"))
     except models.User.DoesNotExist:
-        # todo error message
-        pass
+        messages.error(request, _("Not Found User"))
     return redirect(reverse("core:home"))
 
 
 def github_login(request):
     client_id = os.environ.get("GH_ID")
-    redirect_uri = "http://127.0.0.1:8000/users/login/github/callback"
-    # TODO: we need change 127.0.0.1 => deploy domain
+    redirect_uri = f"{HOST_DOMAIN}/users/login/github/callback"
     return redirect(
         f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&scope=read:user"
     )
@@ -156,8 +157,7 @@ KAKAO_AUTH_DOMAIN = "https://kauth.kakao.com/oauth"
 
 def kakao_login(request):
     client_id = os.environ.get("KAKAO_ADMIN_ID")
-    redirect_uri = "http://127.0.0.1:8000/users/login/kakao/callback"
-    # TODO: we need change 127.0.0.1 => deploy domain
+    redirect_uri = f"{HOST_DOMAIN}/users/login/kakao/callback"
     return redirect(
         f"{KAKAO_AUTH_DOMAIN}/authorize?client_id={client_id}&redirect_uri={redirect_uri}&response_type=code"
     )
@@ -172,8 +172,7 @@ def kakao_callback(request):
     try:
         code = request.GET.get("code")
         client_id = os.environ.get("KAKAO_ADMIN_ID")
-        redirect_uri = "http://127.0.0.1:8000/users/login/kakao/callback"
-        # TODO: we need change 127.0.0.1 => deploy domain
+        redirect_uri = f"{HOST_DOMAIN}/users/login/kakao/callback"
         data = {
             "grant_type": "authorization_code",
             "client_id": client_id,
