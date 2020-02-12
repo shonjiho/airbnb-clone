@@ -35,3 +35,4 @@ virtualenv-clone==0.5.3
 virtualenv==20.0.2
 zipp==2.2.0
 psycopg2==2.8.4
+sentry_sdk==0.13.2
