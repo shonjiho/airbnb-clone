@@ -18,7 +18,7 @@ def create(request, room, year, month, day):
     try:
         date_obj = datetime.datetime(year=year, month=month, day=day)
         room = room_models.Room.objects.get(pk=room)
-        models.BookedDay.objects.get(day=date_obj)
+        models.BookedDay.objects.get(day=date_obj, reservation__in=room.reservations.all())
         raise CreateError()
     except (room_models.Room.DoesNotExist, CreateError):
         messages.error(request, "Can`t Reverse That Room")
