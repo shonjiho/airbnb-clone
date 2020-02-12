@@ -132,3 +132,7 @@ _MACOSX
 node_modules
 
 static/css
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
